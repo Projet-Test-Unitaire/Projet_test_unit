@@ -22,10 +22,10 @@ def _login_club(client):
 
 def _book_place(client, placesToPurchase, newAvailiblePLaces=None, newAvailiblePoints=None):
     rv = client.post('/purchasePlaces', data =dict(club = 'Iron Temple', competition='Spring Festival', places = placesToPurchase), follow_redirects = True)
-    data = rv.data.decode()
-    assert 'Great-booking complete!' in data
-    assert 'Points available: {}'.format(newAvailiblePoints) in data
-    assert 'Number of Places: {}'.format(newAvailiblePLaces) in data
+    print(rv.data.decode())
+    assert 'Great-booking complete!' in rv.data.decode()
+    assert '<span class="text-muted h4">Points available: {}</span>'.format(newAvailiblePoints) in rv.data.decode()
+    assert '<td>{}</td>'.format(newAvailiblePLaces) in rv.data.decode()
 
 def _book_place_failed(client, placesToPurchase):
     rv = client.post('/purchasePlaces', data =dict(club = 'Iron Temple', competition='Spring Festival', places = placesToPurchase), follow_redirects = True)
