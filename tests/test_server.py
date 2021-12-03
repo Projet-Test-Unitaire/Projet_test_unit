@@ -7,7 +7,7 @@ Created on Thu Dec  2 10:24:48 2021
 """
 
 import pytest
-from tests.conftest import client, _login_club, _book_place, _book_place_failed, _logout_user, _load_All
+from tests.conftest import client, _server_start_index, _login_club, _load_clubs, _load_competitions, _book_place, _book_place_failed, _logout_club
         
 # 2nd test [route : index]
 """
@@ -15,14 +15,7 @@ Ecrire un test unitaire pour s’assurer que le serveur se lance correctement et
 proprement ?
 """            
 def test_home_page_returns_correct_html(client):
-    response = client.get('/')
-    assert response.status_code == 200
-    assert b'<input' in response.data        
-	
-def test_server_start(client):
-    rv = client.get('/', follow_redirects = False)
-    assert rv.status_code == 200
-    assert b'<form' in rv.data, b'<input' in rv.data
+    _server_start_index(client)       
     
 # 3rd test [route : showSummary][params : (email)]
 """
@@ -70,7 +63,7 @@ concours et les points déduits d'un club ?
 """
 def test_but_success_decrement_point_to_point(client):
     _login_club(client)
-    _book_place(client, 1, 24, 1)
+    _book_place(client, 1, 24, 11)
 
 # 8th test [route : book/purchasePlaces][params : ()]
 """
@@ -105,21 +98,28 @@ a été mis à jour de sorte que 3 points = 1 place de compétition.
 """
 def test_but_success_decrement_point_to_3point(client):
     _login_club(client)
-    _book_place(client, 0, 24, 1)
+    _book_place(client, 1, 23, 8)
 
 # 12th test [route : logout]
 """
 Test unitaire pour logout ?
 """
 def test_logout(client):
-    _logout_user(client)
+    _logout_club(client)
 
 # 13th test_integration [route : all]
 """
 Tests d’intégration (fichier server.py) :
 """
 def test_integration(client):
-    _load_All(client)
+    _load_clubs()
+    _load_competitions()
+    _server_start_index(client) # index
+    _login_club(client)
+    rv = client.get('/book/{}/{}'.format('Spring Festival', 'Iron Temple'), follow_redirects = True)
+    assert rv.status_code == 200
+    assert rv.data.decode().find('<h2>Spring Festival</h2>')!= -1
+    _book_place(client, 1, 22, 5)
 
 # 14th rapport [FINAL]
 """

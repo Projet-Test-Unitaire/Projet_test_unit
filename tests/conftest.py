@@ -6,7 +6,7 @@ Created on Thu Dec  2 13:05:16 2021
 @author: mockingbird
 """
 import pytest
-from server import app, loadClubs, loadCompetitions, index, showSummary, book, purchasePlaces, logout
+from server import app, loadClubs, loadCompetitions
 
 @pytest.fixture
 def client():
@@ -30,17 +30,23 @@ def _book_place(client, placesToPurchase, newAvailiblePLaces=None, newAvailibleP
 def _book_place_failed(client, placesToPurchase):
     rv = client.post('/purchasePlaces', data =dict(club = 'Iron Temple', competition='Spring Festival', places = placesToPurchase), follow_redirects = True)
     data = rv.data.decode()
-    assert 'Not enought points !' in data or 'Not enought places availible !' in data or 'Too many places requiered' in data
+    assert 'Not enought points !' in data or 'Not enought places availible !' in data or 'Too many places requiered' in data, 'Invalid amount of requiered places' in data
 
-def _logout_user(client):
+def _logout_club(client):
     rv = client.get("/logout")
     assert rv.status_code == 302
 
-def _load_All(client):
-    # index()
-    # loadClubs()
-    # loadCompetitions()
-    # showSummary()
-    book('Iron Temple', 'Spring Festival')
-    purchasePlaces()
-    logout()
+def _server_start_index(client):
+    rv = client.get('/')
+    assert rv.status_code == 200
+    assert b'<form' in rv.data, b'<input' in rv.data
+
+def _load_clubs():
+    clubs = loadClubs()
+    assert clubs != []
+    assert list(clubs[0].keys()) == ['name', 'email', 'points']
+
+def _load_competitions():
+    clubs = loadCompetitions()
+    assert clubs != []
+    assert list(clubs[0].keys()) == ['name', 'date', 'numberOfPlaces']

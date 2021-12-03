@@ -27,12 +27,13 @@ def index():
 def showSummary():
     try:
         club = [club for club in clubs if club['email'] == request.form['email']][0]
-        if club in clubs:    
-            return render_template('welcome.html',club=club,competitions=competitions)
+        if club in clubs:
+            session['email'] = request.form['email']
+            session['start'] = True
+            return render_template('welcome.html',club = club, competitions = competitions)
     except:
         error = 'Sorry, this doesn\'t exist !'
         return render_template('index.html', error = error), 403
-
 
 @app.route('/book/<competition>/<club>')
 def book(competition, club):
@@ -55,6 +56,8 @@ def purchasePlaces():
 
         if int(club["points"]) < (placesRequired * 3):
             flash("Not enought points !")
+        elif int(placesRequired) <= 0:
+            flash('Invalid amount of requiered places')
         elif placesRequired > int(competition["numberOfPlaces"]):
             flash("Not enought places availible !")
         elif int(placesRequired) >= 12:
@@ -65,11 +68,13 @@ def purchasePlaces():
             flash('Great-booking complete!')
     except Exception as error:
         flash("Something went wrong-please try again")
-        print(error)
     return render_template('welcome.html', club=club, competitions=competitions), 403
 
 
 # TODO: Add route for points display
+@app.route('/pointsDiplay')
+def pointsDiplay():
+    return render_template('dashboard.html', clubs=clubs)
 
 
 @app.route('/logout')
