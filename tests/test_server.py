@@ -7,7 +7,7 @@ Created on Thu Dec  2 10:24:48 2021
 """
 
 import pytest
-from tests.conftest import client, _server_start_index, _login_club, _load_clubs, _load_competitions, _book_place, _book_place_failed, _logout_club
+from tests.conftest import client, _server_start_index, _login_club, _load_clubs, _load_competitions, _book_place, _book_place_failed, _logout_club, _pages_return_correct_html_get
         
 # 2nd test [route : index]
 """
@@ -15,7 +15,11 @@ Ecrire un test unitaire pour s’assurer que le serveur se lance correctement et
 proprement ?
 """            
 def test_home_page_returns_correct_html(client):
-    _server_start_index(client)       
+    _server_start_index(client)     
+
+def test_pages_return_correct_html(client):
+    _pages_return_correct_html_get(client, '/', 'index.html')
+    # _pages_return_correct_html_get(client, '/book/{}/{}'.format('Spring Festival', 'Iron Temple'), 'welcome.html')
     
 # 3rd test [route : showSummary][params : (email)]
 """
@@ -33,8 +37,7 @@ email incorrect (par exemple : “Désolé, cet email n'a pas été trouvé”) 
 def test_summary_print_on_email_invalid(client):
     rv = client.post('/showSummary', data = dict(email = 'test@simplylift.co'), follow_redirects = True)
     assert rv.status_code == 403
-    print(rv.data)
-    assert rv.data.decode().find("Sorry, this doesn&#39;t exist !") != -1
+    assert rv.data.decode().find("Sorry, this email doesn&#39;t exist !") != -1
 
 # 5th test [route : book]
 """
@@ -63,7 +66,7 @@ concours et les points déduits d'un club ?
 """
 def test_but_success_decrement_point_to_point(client):
     _login_club(client)
-    _book_place(client, 1, 24, 11)
+    _book_place(client, 1, 12, 11)
 
 # 8th test [route : book/purchasePlaces][params : ()]
 """
@@ -71,7 +74,15 @@ Un test pour s'assurer qu'il affiche le message d'erreur souhaité lorsqu'il y a
 """
 def test_error_msg_places(client):
     _login_club(client)
-    _book_place_failed(client, 13)
+    _book_place_failed(client, 13, 'Iron Temple', 'Grand Canyon', 2)
+
+
+"""
+Un test pour s'assurer qu'il affiche le message d'erreur souhaité lorsque la date d'une compétition est depassée ?
+"""
+def test_error_msg_date(client):
+    _login_club(client)
+    _book_place_failed(client, 1, 'Iron Temple', 'Spring Festival', 3)
 
 # 9th test [route : book/purchasePlaces]
 """
@@ -80,7 +91,7 @@ plus de places que les points disponibles ?
 """
 def test_not_enough_points(client):
     _login_club(client)
-    _book_place_failed(client, 12)
+    _book_place_failed(client, 5, 'Iron Temple', 'Grand Canyon', 1)
 
 # 10th page web [route : dashboard]
 """ 
@@ -98,7 +109,7 @@ a été mis à jour de sorte que 3 points = 1 place de compétition.
 """
 def test_but_success_decrement_point_to_3point(client):
     _login_club(client)
-    _book_place(client, 1, 23, 8)
+    _book_place(client, 1, 11, 8)
 
 # 12th test [route : logout]
 """
@@ -119,7 +130,7 @@ def test_integration(client):
     rv = client.get('/book/{}/{}'.format('Spring Festival', 'Iron Temple'), follow_redirects = True)
     assert rv.status_code == 200
     assert rv.data.decode().find('<h2>Spring Festival</h2>')!= -1
-    _book_place(client, 1, 22, 5)
+    _book_place(client, 1, 10, 5)
 
 # 14th rapport [FINAL]
 """

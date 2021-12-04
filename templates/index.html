@@ -18,11 +18,19 @@
 					<div class="login-content">
 						<div class="login-form">
 							<h1 class="text-center">Welcome to the GUDLFT Registration Portal!</h1>
-							{%if error%}
-							<div class="alert alert-danger">
-								<span class="text-dark">{{error}}</span>
-							</div>
-							{%endif%}
+							{% with messages = get_flashed_messages()%}
+							
+								{% if messages %}
+								<div class="alert alert-warning p-1">
+									<ul style="list-style: none; margin: auto; padding: auto;" class="p-2">
+										{% for message in messages %}
+										<li>{{message}}</li>
+										{% endfor %}
+									</ul>
+								</div>
+								{% endif%}
+
+							{%endwith%}
 							<form action="showSummary" method="post">
 								<div class="form-group">
 									<label><i class="fas fa-at"></i>&nbsp;Email Address</label>
