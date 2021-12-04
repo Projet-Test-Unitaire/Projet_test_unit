@@ -54,7 +54,7 @@ def purchasePlaces():
         club = [c for c in clubs if c['name'] == request.form['club']][0]
         placesRequired = int(request.form['places'])
 
-        if int(club["points"]) < (placesRequired * 3):
+        if int(club["points"]) < (placesRequired*3):
             flash("Not enought points !")
             codeError = 403
 
@@ -62,7 +62,7 @@ def purchasePlaces():
             flash('Invalid amount of requiered places')
             codeError = 403
 
-        elif placesRequired > int(competition["numberOfPlaces"]):
+        elif (placesRequired) > int(competition["numberOfPlaces"]):
             flash("Not enought places availible !")
             codeError = 403
 
@@ -76,7 +76,7 @@ def purchasePlaces():
 
         elif int(club["points"]) > 0:
             competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
-            club['points'] = int(club['points']) - (placesRequired * 3)
+            club['points'] = int(club['points']) - (placesRequired*3)
             flash('Great-booking complete!')
             codeError = 200
             

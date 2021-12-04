@@ -6,6 +6,9 @@ Created on Thu Dec  2 10:24:48 2021
 @author: mockingbird
 """
 
+# pytest -v --capture sys -rF --capture sys -rP --html=test_report.html tests/test_server.py.py
+
+
 import pytest
 from tests.conftest import client, _server_start_index, _login_club, _load_clubs, _load_competitions, _book_place, _book_place_failed, _logout_club, _pages_return_correct_html_get
         
@@ -66,7 +69,7 @@ concours et les points déduits d'un club ?
 """
 def test_but_success_decrement_point_to_point(client):
     _login_club(client)
-    _book_place(client, 1, 12, 11)
+    _book_place(client, 1, 12, 10)
 
 # 8th test [route : book/purchasePlaces][params : ()]
 """
@@ -91,7 +94,7 @@ plus de places que les points disponibles ?
 """
 def test_not_enough_points(client):
     _login_club(client)
-    _book_place_failed(client, 5, 'Iron Temple', 'Grand Canyon', 1)
+    _book_place_failed(client, 6, 'Iron Temple', 'Grand Canyon', 1)
 
 # 10th page web [route : dashboard]
 """ 
@@ -109,7 +112,7 @@ a été mis à jour de sorte que 3 points = 1 place de compétition.
 """
 def test_but_success_decrement_point_to_3point(client):
     _login_club(client)
-    _book_place(client, 1, 11, 8)
+    _book_place(client, 1, 11, 7)
 
 # 12th test [route : logout]
 """
@@ -117,20 +120,6 @@ Test unitaire pour logout ?
 """
 def test_logout(client):
     _logout_club(client)
-
-# 13th test_integration [route : all]
-"""
-Tests d’intégration (fichier server.py) :
-"""
-def test_integration(client):
-    _load_clubs()
-    _load_competitions()
-    _server_start_index(client) # index
-    _login_club(client)
-    rv = client.get('/book/{}/{}'.format('Spring Festival', 'Iron Temple'), follow_redirects = True)
-    assert rv.status_code == 200
-    assert rv.data.decode().find('<h2>Spring Festival</h2>')!= -1
-    _book_place(client, 1, 10, 5)
 
 # 14th rapport [FINAL]
 """

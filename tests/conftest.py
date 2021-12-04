@@ -27,9 +27,10 @@ def _pages_return_correct_html_get(client, route, page):
     assert template.render() == rv.get_data(as_text=True) 
 
 def _login_club(client):
-    rv = client.post('/showSummary', data = dict(email = 'admin@irontemple.com'), follow_redirects = True)
+    email = 'admin@irontemple.com'
+    rv = client.post('/showSummary', data = dict(email = email), follow_redirects = True)
     assert rv.status_code == 200
-    assert rv.data.decode().find("Welcome, admin@irontemple.com") != -1
+    assert rv.data.decode().find("Welcome, {}".format(email)) != -1
 
 def _book_place(client, placesToPurchase, newAvailiblePLaces=None, newAvailiblePoints=None):
     rv = client.post('/purchasePlaces', data =dict(club = 'Iron Temple', competition='Grand Canyon', places = placesToPurchase), follow_redirects = True)
@@ -49,8 +50,11 @@ def _book_place_failed(client, placesToPurchase, club, competition, error):
         assert data.find('Old date, booking impossible !')
 
 def _logout_club(client):
-    rv = client.get("/logout")
-    assert rv.status_code == 302
+    rv = client.get("/logout", follow_redirects=True)
+    assert rv.status_code == 200
+    data = rv.data.decode()
+    assert '<li>You&#39;re now disconnected</li>' in data
+
 
 def _load_clubs():
     clubs = loadClubs()
