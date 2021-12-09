@@ -66,7 +66,7 @@ def purchasePlaces():
             flash("Not enought places available !")
             codeError = 403
 
-        elif int(placesRequired) >= 12:
+        elif int(placesRequired) > 12:
             flash('Too many places requiered')
             codeError = 403
 
