@@ -63,7 +63,7 @@ def purchasePlaces():
             codeError = 403
 
         elif (placesRequired) > int(competition["numberOfPlaces"]):
-            flash("Not enought places availible !")
+            flash("Not enought places available !")
             codeError = 403
 
         elif int(placesRequired) >= 12:

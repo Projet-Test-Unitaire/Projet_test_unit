@@ -69,7 +69,7 @@ concours et les points déduits d'un club ?
 """
 def test_but_success_decrement_point_to_point(client):
     _login_club(client)
-    _book_place(client, 1, 12, 10)
+    _book_place(client, 1, 11, 7)
 
 # 8th test [route : book/purchasePlaces][params : ()]
 """
@@ -112,7 +112,7 @@ a été mis à jour de sorte que 3 points = 1 place de compétition.
 """
 def test_but_success_decrement_point_to_3point(client):
     _login_club(client)
-    _book_place(client, 1, 11, 7)
+    _book_place(client, 1, 10, 4)
 
 # 12th test [route : logout]
 """

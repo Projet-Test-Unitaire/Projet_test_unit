@@ -43,7 +43,7 @@ def _book_place_failed(client, placesToPurchase, club, competition, error):
     rv = client.post('/purchasePlaces', data =dict(club = club, competition = competition , places = placesToPurchase), follow_redirects = True)
     data = rv.data.decode()
     if error == 1:
-        assert data.find('Not enought points !') or data.find('Not enought places availible !') or data.find('Invalid amount of requiered places')
+        assert data.find('Not enought points !') or data.find('Not enought places available !') or data.find('Invalid amount of requiered places')
     elif error == 2:
         assert data.find('Too many places requiered')
     elif error == 3:
