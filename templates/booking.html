@@ -16,13 +16,14 @@
                     <div class="login-content">
                         <div class="login-form">
                             <h2>{{competition['name']}}</h2>
+                            <small class="text-muted">PS: (1 Place => 3 Points)</small><br>
                             <span class="text-muted">Places available: {{competition['numberOfPlaces']}}</span>
                             <form action="/purchasePlaces" method="post">
                                 <div class="form-group">
                                     <label for="places"><i class="fas fa-map-pin"></i>&nbsp;places:</label>
                                     <input type="hidden" name="club" value="{{club['name']}}">
                                     <input type="hidden" name="competition" value="{{competition['name']}}">
-                                    <input class="au-input au-input--full" type="number" min="1" max="12" name="places" placeholder="Number Of Places">
+                                    <input class="au-input au-input--full" type="number" name="places" placeholder="Number Of Places">
                                 </div>
                                 <button class="btn btn-{{color}} w-100 m-b-20 p-2 mt-2" type="submit">Book</button>
                             </form>

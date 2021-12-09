@@ -25,29 +25,25 @@ class PerfTest(HttpUser):
     @task
     def speed_index(self):
         self.client.get(url="/")
+
+    @task
+    def speed_dashboard(self):
+         self.client.get("/pointsDiplay")
     
     @task
     def speed_showSummary(self):
-        payload = {"email":"admin@irontemple.com"}
+        payload = {"email":"test@test.ta"}
         self.client.post("/showSummary", data=payload)
     
     @task
     def speed_book(self):
-        self.client.get("/book/Grand Canyon/Iron Temple")
+        self.client.get("/book/Super Giga Test/Mon Test")
 
-    @task #A corriger , meme si c'est pas vraiment demander sur le sujet
+    @task
     def speed_purchasePlaces(self):
-        self.client.get(url="/")
-        payload = {"email":"admin@irontemple.com"}
-        self.client.post("/showSummary", data=payload)
-        payload = {"club":"Iron Temple", "competition":"Grand Canyon", "places": 1}
+        payload = {"club":"Mon Test", "competition":"Super Giga Test", "places": 1}
         self.client.post("/purchasePlaces",data= payload)
 
     @task
     def speed_logout(self):
         self.client.get("/logout")
-        
-    @task
-    def speed_dashboard(self):
-         self.client.get("/pointsDiplay")
-        

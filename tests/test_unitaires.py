@@ -47,9 +47,9 @@ def test_summary_print_on_email_invalid(client):
 Un test pour s'assurer qu'il affiche une page booking.html pour un club ou une compétition valide ?
 """
 def test_booking_valid_params(client):
-    rv = client.get('/book/{}/{}'.format('Spring Festival', 'Iron Temple'), follow_redirects = True)
+    rv = client.get('/book/{}/{}'.format('Grand Canyon', 'Iron Temple'), follow_redirects = True)
     assert rv.status_code == 200
-    assert rv.data.decode().find('<h2>Spring Festival</h2>')!= -1
+    assert rv.data.decode().find('<h2>Grand Canyon</h2>')!= -1
 
 # 6th test [route : book]
 """
@@ -69,7 +69,7 @@ concours et les points déduits d'un club ?
 """
 def test_but_success_decrement_point_to_point(client):
     _login_club(client)
-    _book_place(client, 1, 11, 7)
+    _book_place(client, 1, 79, 10, 'Super Test')
 
 # 8th test [route : book/purchasePlaces][params : ()]
 """
@@ -78,7 +78,6 @@ Un test pour s'assurer qu'il affiche le message d'erreur souhaité lorsqu'il y a
 def test_error_msg_places(client):
     _login_club(client)
     _book_place_failed(client, 13, 'Iron Temple', 'Grand Canyon', 2)
-
 
 """
 Un test pour s'assurer qu'il affiche le message d'erreur souhaité lorsque la date d'une compétition est depassée ?
@@ -96,6 +95,14 @@ def test_not_enough_points(client):
     _login_club(client)
     _book_place_failed(client, 6, 'Iron Temple', 'Grand Canyon', 1)
 
+def test_not_enough_places(client):
+    _login_club(client)
+    _book_place_failed(client, 14, 'Iron Temple', 'Grand Canyon', 11)
+
+def test_invalid_places(client):
+    _login_club(client)
+    _book_place_failed(client, 14, 'Iron Temple', 'Grand Canyon', 12)
+
 # 10th page web [route : dashboard]
 """ 
 Livrable : Une page séparée qui comprends un tableau montrant la liste des clubs et les soldes de points
@@ -112,7 +119,7 @@ a été mis à jour de sorte que 3 points = 1 place de compétition.
 """
 def test_but_success_decrement_point_to_3point(client):
     _login_club(client)
-    _book_place(client, 1, 10, 4)
+    _book_place(client, 1, 78, 7, 'Super Test')
 
 # 12th test [route : logout]
 """
@@ -125,3 +132,6 @@ def test_logout(client):
 """
 Vérifier la couverture des tests. Livrable : rapport de couverture achevés.
 """
+def test_loads(client):
+    _load_clubs()
+    _load_competitions()
